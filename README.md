@@ -1,1 +1,1 @@
-# mhdnjs-bankist
+# smjs-bankist
