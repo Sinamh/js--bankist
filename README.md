@@ -1,1 +1,1 @@
-# smjs-bankist
+# js-bankist
