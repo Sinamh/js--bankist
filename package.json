@@ -1,0 +1,24 @@
+{
+  "name": "js--bankist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sinamh/js--bankist.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sinamh/js--bankist/issues"
+  },
+  "homepage": "https://github.com/Sinamh/js--bankist#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
