@@ -19,59 +19,72 @@
     <nav>
       <img src="logo.png" alt="Logo" class="logo" />
       <p class="welcome">Banker</p>
-      <form class="login">
-        <input
-          type="text"
-          placeholder="user"
-          class="login__input login__input--user"
-        />
-        <!-- In practice, use type="password" -->
-        <input
-          type="password"
-          placeholder="PIN"
-          maxlength="4"
-          class="login__input login__input--pin"
-        />
-        <button class="login__btn">&rarr;</button>
-      </form>
     </nav>
 
     <main class="main">
-      <!-- SIGNUP -->
-      <form class="signup">
-        <input
-          type="text"
-          name="fname"
-          placeholder="FIRST NAME"
-          class="signup__input signup__input--fname"
-        />
-        <input
-          type="text"
-          name="lname"
-          placeholder="LAST NAME"
-          class="signup__input signup__input--lname"
-        />
-        <input
-          type="text"
-          name="user"
-          placeholder="USERNAME"
-          class="signup__input signup__input--user"
-        />
-        <input
-          type="password"
-          name="pass"
-          placeholder="PIN"
-          maxlength="4"
-          class="signup__input signup__input--pin"
-        />
-        <input
-          type="password"
-          placeholder="COMFIRM PIN"
-          maxlength="4"
-          class="signup__input signup__input--confirm"
-        />
-        <button class="signup__btn">Signup</button>
-      </form>
+      <div class="signlog">
+        <div class="switch__btns">
+          <button class="login__switch switch-selected">Log in</button
+          ><button class="signup__switch">sign up</button>
+        </div>
+        <!-- LOGIN -->
+        <form class="login">
+          <input
+            type="text"
+            placeholder="USER"
+            class="login__input login__input--user"
+          />
+          <!-- In practice, use type="password" -->
+          <input
+            type="password"
+            placeholder="PIN"
+            maxlength="4"
+            class="login__input login__input--pin"
+          />
+          <button class="login__btn">Log in</button>
+        </form>
+        <!-- REGISTER -->
+        <form class="signup">
+          <input
+            type="text"
+            name="fname"
+            placeholder="FIRST NAME"
+            class="signup__input signup__input--fname"
+          />
+          <input
+            type="text"
+            name="lname"
+            placeholder="LAST NAME"
+            class="signup__input signup__input--lname"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="EMAIL"
+            class="signup__input signup__input--user"
+          />
+          <input
+            type="text"
+            name="user"
+            placeholder="USER"
+            class="signup__input signup__input--user"
+          />
+          <input
+            type="password"
+            name="pass"
+            placeholder="PIN"
+            maxlength="4"
+            class="signup__input signup__input--pin"
+          />
+          <input
+            type="password"
+            placeholder="COMFIRM PIN"
+            maxlength="4"
+            class="signup__input signup__input--confirm"
+          />
+          <button class="signup__btn">sign up</button>
+        </form>
+      </div>
       <div class="app">
         <!-- BALANCE -->
         <div class="balance">

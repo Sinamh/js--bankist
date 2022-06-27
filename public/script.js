@@ -50,6 +50,9 @@ const containerApp = document.querySelector('.app');
 const containerMovements = document.querySelector('.movements');
 
 const btnLogin = document.querySelector('.login__btn');
+const btnSignup = document.querySelector('.signup__btn');
+const btnLoginSWTCH = document.querySelector('.login__switch');
+const btnSignupSWTCH = document.querySelector('.signup__switch');
 const btnTransfer = document.querySelector('.form__btn--transfer');
 const btnLoan = document.querySelector('.form__btn--loan');
 const btnClose = document.querySelector('.form__btn--close');
@@ -62,6 +65,9 @@ const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
+
+const loginForm = document.querySelector('.login');
+const signupForm = document.querySelector('.signup');
 
 /////////////////////////////////////////////////
 // Functions
@@ -226,12 +232,25 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername.value = inputClosePin.value = '';
 });
 
+btnLoginSWTCH.addEventListener('click', () => {
+  btnSignupSWTCH.classList.remove('switch-selected');
+  btnLoginSWTCH.classList.add('switch-selected');
+  loginForm.style.display = 'block';
+  signupForm.style.display = 'none';
+});
+
+btnSignupSWTCH.addEventListener('click', () => {
+  btnLoginSWTCH.classList.remove('switch-selected');
+  btnSignupSWTCH.classList.add('switch-selected');
+  signupForm.style.display = 'block';
+  loginForm.style.display = 'none';
+});
+
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
   displayMovements(currentAccount.movements, !sorted);
   sorted = !sorted;
 });
-
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
