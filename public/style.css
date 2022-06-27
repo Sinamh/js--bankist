@@ -295,3 +295,35 @@ h2 {
 .timer {
   font-weight: 600;
 }
+
+.signup{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 100;
+}
+
+.signup__input{
+  width: 100%;
+  padding: 10px 0;
+  margin: 5px 0;
+  border-radius: 50px;
+  text-align: center;
+  border: 0;
+}
+
+.signup__btn{
+  text-transform: uppercase;
+  width: 100%;
+  border: 0;
+  margin-top: 20px;
+  padding: 10px;
+  background: #f7f1da;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.signup__btn:hover{
+  background: #f7e397;
+}
