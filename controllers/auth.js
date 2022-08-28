@@ -1,11 +1,52 @@
-const User = require("../models/User");
+const crypto = require("crypto");
+const { nextTick } = require("process");
+const { StatusCodes } = require("http-status-codes");
 
-const register = async (req, res) => {
-  const { fname, lname, user: usr, pass } = req.body;
+const CustomError = require("../errors");
+const User = require("../models/Users");
+const Token = require("../models/Token");
+const {
+  attachCookiesToResponse,
+  createTokenUser,
+  sendVerificationEmail,
+  sendResetPasswordEmail,
+  createHash,
+} = require("../utils");
 
-  const userAlreadyExists = await User.findOne({ usr });
+const register = async (req, res, next) => {
+  const { fname, lname, email, user: usr, pass, confirm } = req.body;
+
+  if (!fname) {
+    throw new CustomError.BadRequestError("First name required.");
+  }
+
+  if (!lname) {
+    throw new CustomError.BadRequestError("Last name required.");
+  }
+
+  if (!Email) {
+    throw new CustomError.BadRequestError("First name required.");
+  }
+
+  if (!usr) {
+    throw new CustomError.BadRequestError("Username required.");
+  }
+
+  if (!pass) {
+    throw new CustomError.BadRequestError("Password required.");
+  }
+
+  if (pass !== confirm || !confirm) {
+    throw new CustomError.BadRequestError("Passwords don't match.");
+  }
+
+  const userAlreadyExists = await User.findOne({ username: usr });
   if (userAlreadyExists) {
-    throw new CustomError.BadRequestError("User already exists");
+    try {
+      throw new CustomError.BadRequestError("User already exists");
+    } catch (error) {
+      return next(error);
+    }
   }
 
   // first registered user is an admin
@@ -15,36 +56,104 @@ const register = async (req, res) => {
   const verificationToken = crypto.randomBytes(40).toString("hex");
 
   const user = await User.create({
-    fname,
-    lname,
-    user: usr,
-    pass,
+    first: fname,
+    last: lname,
+    username: usr,
+    email,
+    password: pass,
     role,
-    vtoken: verificationToken,
+    verificationToken,
+  }).catch(err => {
+    next(err);
   });
+
+  if (!user) return;
+
+  const origin = `http://${req.get("host")}`;
+  try {
+    let info = await sendVerificationEmail({
+      name: user.user,
+      email: user.email,
+      verificationToken: user.verificationToken,
+      origin,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+
   res.status(StatusCodes.CREATED).json({
-    msg: "User created successfully!",
+    msg: "Please verify your email address!",
   });
 };
 
-const login = async (req, res) => {
-  const { user: usr, pass } = req.body;
+const verifyEmail = async (req, res, next) => {
+  const { verificationToken, email } = req.body;
+  const user = await User.findOne({ email });
 
-  if (!usr || !pass) {
-    throw new CustomError.BadRequestError("Please provide email and password");
+  if (user.isVerified) {
+    try {
+      throw new CustomError.UnauthenticatedError(
+        "Already verified this email."
+      );
+    } catch (error) {
+      return next(error);
+    }
   }
-  const user = await User.findOne({ usr });
 
   if (!user) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    try {
+      throw new CustomError.UnauthenticatedError("Verification Failed");
+    } catch (error) {
+      return next(error);
+    }
   }
-  const isPasswordCorrect = await user.comparePassword(pass);
+
+  if (user.verificationToken !== verificationToken) {
+    try {
+      throw new CustomError.UnauthenticatedError("Verification Failed");
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  (user.isVerified = true), (user.verified = Date.now());
+  user.verificationToken = "";
+
+  await user.save();
+
+  res.status(StatusCodes.OK).json({ msg: "Email Verified" });
+};
+
+const login = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    throw new CustomError.BadRequestError("Please provide email and password");
+  }
+  const user = await User.findOne({ username });
+
+  if (!user) {
+    try {
+      throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    } catch (error) {
+      return next(error);
+    }
+  }
+  const isPasswordCorrect = await user.comparePassword(password);
 
   if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    try {
+      throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    } catch (error) {
+      return next(error);
+    }
   }
   if (!user.isVerified) {
-    throw new CustomError.UnauthenticatedError("Please verify your email");
+    try {
+      throw new CustomError.UnauthenticatedError("Please verify your email");
+    } catch (error) {
+      return next(error);
+    }
   }
   const tokenUser = createTokenUser(user);
 
@@ -74,4 +183,11 @@ const login = async (req, res) => {
   attachCookiesToResponse({ res, user: tokenUser, refreshToken });
 
   res.status(StatusCodes.OK).json({ user: tokenUser });
+};
+
+module.exports = {
+  register,
+  verifyEmail,
+  login,
+  // logout,
 };

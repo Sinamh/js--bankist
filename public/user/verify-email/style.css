@@ -1,0 +1,55 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.msgboard {
+  background: #f44336;
+  /* border-radius: 10px; */
+  height: 50px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  /* display: none; */
+}
+
+.msgboard--text {
+  color: aliceblue;
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 0 auto;
+  line-height: 50px;
+}
+
+.btn-verify {
+  color: #fefefe;
+  background: #00c853;
+  font-size: 1.5rem;
+  display: block;
+  margin: 0 auto;
+  padding: 10px 50px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.btn-verify:hover {
+  background: #009624;
+}
+
+.btn-home {
+  color: #000;
+  background: none;
+  font-size: 1.5rem;
+  display: block;
+  padding: 2px 5px;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 5px;
+}
+
+.btn-home:hover {
+  color: #fefefe;
+  background: rgb(161, 161, 161);
+  border-radius: 5px;
+}

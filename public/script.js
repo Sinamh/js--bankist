@@ -1,5 +1,6 @@
 'use strict';
 
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // BANKIST APP
@@ -57,6 +58,7 @@ const btnTransfer = document.querySelector('.form__btn--transfer');
 const btnLoan = document.querySelector('.form__btn--loan');
 const btnClose = document.querySelector('.form__btn--close');
 const btnSort = document.querySelector('.btn--sort');
+const btnmsgBoardClose = document.querySelector('.msgboard--close-text');
 
 const inputLoginUsername = document.querySelector('.login__input--user');
 const inputLoginPin = document.querySelector('.login__input--pin');
@@ -65,9 +67,17 @@ const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
+const inputSignupFName = document.querySelector('.signup__input--fname');
+const inputSignupLName = document.querySelector('.signup__input--lname');
+const inputSignupEmail = document.querySelector('.signup__input--email');
+const inputSignupUsername = document.querySelector('.signup__input--user');
+const inputSignupPin = document.querySelector('.signup__input--pin');
+const inputSignupConfirmPin = document.querySelector('.signup__input--confirm');
 
 const loginForm = document.querySelector('.login');
 const signupForm = document.querySelector('.signup');
+const msgBoard = document.querySelector('.msgboard');
+const msgBoardText = document.querySelector('.msgboard--text');
 
 /////////////////////////////////////////////////
 // Functions
@@ -82,9 +92,8 @@ const displayMovements = function (movements, sort = false) {
 
     const html = `
       <div class="movements__row">
-        <div class="movements__type movements__type--${type}">${
-      i + 1
-    } ${type}</div>
+        <div class="movements__type movements__type--${type}">${i + 1
+      } ${type}</div>
         <div class="movements__value">${mov}€</div>
       </div>
     `;
@@ -157,9 +166,8 @@ btnLogin.addEventListener('click', function (e) {
 
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     // Display UI and message
-    labelWelcome.textContent = `Welcome back, ${
-      currentAccount.owner.split(' ')[0]
-    }`;
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]
+      }`;
     containerApp.style.opacity = 100;
 
     // Clear input fields
@@ -169,6 +177,50 @@ btnLogin.addEventListener('click', function (e) {
     // Update UI
     updateUI(currentAccount);
   }
+});
+
+btnSignup.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  let errResponseCode = 200;
+  let errResponseMSG = '';
+
+  const fname = document.querySelector('.signup__input--fname');
+  const lname = document.querySelector('.signup__input--lname');
+  const email = document.querySelector('.signup__input--email');
+  const user = document.querySelector('.signup__input--user');
+  const pin = document.querySelector('.signup__input--pin');
+  const confirm = document.querySelector('.signup__input--confirm');
+
+  axios({
+    method: 'post',
+    url: '/api/v1/auth/register',
+    data: {
+      fname: fname,
+      lname: lname,
+      email: email,
+      user: user,
+      pin: pin,
+      confirm: confirm,
+    },
+  })
+    .catch(err => {
+      errResponseCode = err.response.status;
+      errResponseMSG = err.response.data.msg;
+    })
+    .finally(() => {
+      if (errResponseCode === 200) {
+        msgBoardText.textContent = 'Please verify your email address';
+        msgBoard.style.display = 'block';
+      } else {
+        msgBoardText.textContent = errResponseMSG;
+        msgBoard.style.display = 'block';
+      }
+    });
+});
+
+btnmsgBoardClose.addEventListener('click', function () {
+  msgBoard.style.display = 'none';
 });
 
 btnTransfer.addEventListener('click', function (e) {
